@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoCloud - Dashboard de Huella de Carbono</title>
+    <!-- Carga de Tailwind CSS para un diseño moderno y responsive -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carga de Lucide Icons (usados en React, ahora cargados como librería) -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <!-- Carga de Chart.js para el gráfico de barras comparativo -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <style>
+        /* Estilos generales para asegurar que las secciones ocupen toda la pantalla */
+        html { scroll-behavior: smooth; }
+        .container { max-width: 1200px; }
+        /* Animación sencilla para los iconos */
+        .icon-hover:hover { transform: scale(1.1); transition: transform 0.3s; }
+        /* Colores primarios basados en la paleta verde de NubeVerde */
+        .bg-primary { background-color: #030213; }
+        .text-primary-foreground { color: #ffffff; }
+        .bg-green-600 { background-color: #38a169; }
+        .hover:bg-green-700:hover { background-color: #2f855a; }
+    </style>
+</head>
+<body class="font-sans antialiased bg-gray-50">
+
+    <!-- HEADER (Basado en el componente Header.jsx) -->
+    <header class="border-b border-gray-200 bg-white sticky top-0 z-50 shadow-md">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-8">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
+                        <span class="text-white font-semibold">EC</span>
+                    </div>
+                    <span class="font-bold text-lg">EcoCloud</span>
+                </div>
+                
+                <nav class="hidden md:flex items-center gap-6 text-gray-600">
+                    <a href="#inicio" class="hover:text-green-600 transition-colors">Inicio</a>
+                    <a href="#acerca" class="hover:text-green-600 transition-colors">Acerca de EcoCloud</a>
+                    <a href="#dashboard" class="hover:text-green-600 transition-colors">Dashboard de Carbono</a>
+                    <a href="#compromiso" class="hover:text-green-600 transition-colors">Nuestro Compromiso</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- 1. SECCIÓN INICIO / HERO (Basado en HeroSection.jsx) -->
+    <section id="inicio" class="bg-gradient-to-br from-green-50 to-emerald-100 py-24 md:py-36">
+        <div class="container mx-auto px-4 max-w-4xl text-center">
+            <div class="inline-flex items-center gap-2 bg-green-600/10 px-4 py-2 rounded-full mb-6">
+                <i data-lucide="leaf" class="w-4 h-4 text-green-600"></i>
+                <span class="text-green-700 text-sm font-medium">Sostenibilidad Digital</span>
+            </div>
+            
+            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800 mb-6 leading-tight">
+                VISUALIZA TU HUELLA DE CARBONO DEL SERVIDOR
+            </h1>
+            
+            <p class="text-gray-600 mb-8 max-w-3xl mx-auto text-lg">
+                Queremos ofrecerte una herramienta para que puedas ver el impacto ambiental de tu servicio de hosting. Descubre cómo nuestra infraestructura, alimentada por energía renovable, reduce drásticamente tu huella.
+            </p>
+            
+            <div class="flex flex-wrap gap-4 justify-center">
+                <a href="#dashboard" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-xl text-white bg-green-600 hover:bg-green-700 transition-colors shadow-lg">
+                    <i data-lucide="calculator" class="w-4 h-4 mr-2"></i>
+                    Calcular mi CO₂
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. SECCIÓN ACERCA DE ECOCLOUD (Nueva sección para cumplir requisito) -->
+    <section id="acerca" class="py-20 bg-white">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-10">Acerca de EcoCloud Hosting</h2>
+            <div class="grid md:grid-cols-2 gap-10 items-center">
+                <div>
+                    <p class="text-gray-600 mb-4">
+                        EcoCloud Hosting nació con la misión de eliminar el impacto ambiental asociado a la infraestructura web. Entendemos que el Cloud Computing tradicional consume cantidades masivas de energía, y gran parte de ella proviene de fuentes no renovables.
+                    </p>
+                    <p class="text-gray-600 mb-4">
+                        Nuestra visión es simple: **energía limpia, servidores eficientes**. Desde nuestros inicios, nos hemos comprometido a operar con un PUE (Power Usage Effectiveness) líder en la industria y a invertir exclusivamente en tecnologías de refrigeración de bajo consumo.
+                    </p>
+                    <p class="text-gray-600 font-semibold">
+                        ¡Únete a la nube verde y haz de la sostenibilidad el estándar!
+                    </p>
+                </div>
+                <div class="rounded-xl overflow-hidden shadow-xl">
+                    <img src="https://placehold.co/600x400/38a169/ffffff?text=Misión+EcoCloud" alt="Misión EcoCloud" class="w-full h-full object-cover">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. SECCIÓN DASHBOARD DE CARBONO (Calculadora Interactiva) -->
+    <section id="dashboard" class="py-20 bg-gray-100">
+        <div class="container mx-auto px-4 max-w-5xl">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Dashboard de Huella de Carbono Simulada</h2>
+            
+            <div class="bg-white p-6 md:p-10 rounded-xl shadow-lg border border-gray-200 grid lg:grid-cols-3 gap-8">
+                
+                <!-- Columna 1: Calculadora (Inputs) -->
+                <div class="lg:col-span-1 space-y-6">
+                    <h3 class="text-xl font-semibold text-gray-800 flex items-center gap-2">
+                        <i data-lucide="line-chart" class="w-5 h-5 text-green-600"></i>
+                        Simulador de Emisiones
+                    </h3>
+                    <div class="space-y-4">
+                        <!-- Input 1: Tráfico Web Diario -->
+                        <div>
+                            <label for="trafico" class="block text-sm font-medium text-gray-700 mb-1">Tráfico Web Diario Estimado (Visitantes)</label>
+                            <input type="number" id="trafico" value="1000" min="100" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500" placeholder="Ej: 5000">
+                        </div>
+                        
+                        <!-- Input 2: Tipo de Contenido -->
+                        <div>
+                            <label for="contenido" class="block text-sm font-medium text-gray-700 mb-1">Tipo de Contenido Dominante</label>
+                            <select id="contenido" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500">
+                                <option value="1">Texto (Bajo Impacto)</option>
+                                <option value="3" selected>Imágenes (Medio Impacto)</option>
+                                <option value="5">Video / Streaming (Alto Impacto)</option>
+                            </select>
+                        </div>
+                        
+                        <button id="calcularBtn" class="w-full inline-flex items-center justify-center px-4 py-3 border border-transparent text-base font-medium rounded-xl text-white bg-green-600 hover:bg-green-700 transition-colors shadow-md mt-4">
+                            <i data-lucide="refresh-cw" class="w-4 h-4 mr-2"></i>
+                            Calcular Huella de CO₂
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Columna 2: Gráfico y Resultados -->
+                <div class="lg:col-span-2">
+                    <div id="loadingMessage" class="hidden text-center p-8 bg-gray-50 rounded-lg">
+                        <p class="text-green-600 text-lg font-semibold">Calculando huella...</p>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2 overflow-hidden">
+                            <div id="progressBar" class="bg-green-600 h-2.5 rounded-full transition-all duration-300 ease-in-out" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div id="chartContainer" class="p-4 border border-gray-200 rounded-xl">
+                        <canvas id="carbonChart" aria-label="Gráfico de comparación de emisiones de CO2"></canvas>
+                    </div>
+
+                    <div id="resultado" class="mt-6 p-4 bg-green-50 rounded-xl border border-green-300 hidden">
+                        <p class="font-bold text-gray-800">Resultado:</p>
+                        <p class="text-sm text-gray-600" id="resultadoTexto"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="text-center text-sm text-gray-500 mt-6">
+                *Nota: Los valores de CO₂ son simulados y se basan en el consumo energético promedio de centros de datos tradicionales frente a nuestra infraestructura de energía 100% renovable.
+            </p>
+        </div>
+    </section>
+
+    <!-- 4. SECCIÓN COMPROMISO (Basado en DataCenterSection.jsx) -->
+    <section id="compromiso" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Nuestro Compromiso Tecnológico</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    Detalle de las tecnologías innovadoras que usamos para reducir el impacto a niveles mínimos.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Tecnología 1: PUE -->
+                <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow border border-gray-200 text-center">
+                    <i data-lucide="gauge" class="w-10 h-10 text-green-600 mx-auto mb-4 icon-hover"></i>
+                    <h3 class="text-xl font-semibold mb-2 text-gray-800">PUE Optimizado</h3>
+                    <p class="text-gray-600">El PUE (Power Usage Effectiveness) mide la eficiencia energética. Nuestro objetivo es alcanzar un PUE de 1.2 o menor, reduciendo significativamente el desperdicio energético.</p>
+                </div>
+                
+                <!-- Tecnología 2: Refrigeración Líquida -->
+                <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow border border-gray-200 text-center">
+                    <i data-lucide="droplets" class="w-10 h-10 text-blue-600 mx-auto mb-4 icon-hover"></i>
+                    <h3 class="text-xl font-semibold mb-2 text-gray-800">Refrigeración Líquida</h3>
+                    <p class="text-gray-600">Los sistemas de refrigeración líquida son hasta 3000 veces más eficientes que el aire, enfriando componentes de alta densidad con consumo energético mínimo.</p>
+                </div>
+                
+                <!-- Tecnología 3: Energías Renovables -->
+                <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow border border-gray-200 text-center">
+                    <i data-lucide="sun" class="w-10 h-10 text-yellow-500 mx-auto mb-4 icon-hover"></i>
+                    <h3 class="text-xl font-semibold mb-2 text-gray-800">Energías Renovables</h3>
+                    <p class="text-gray-600">Alimentamos nuestros data centers con energía 100% renovable proveniente de fuentes solares y eólicas. Esto elimina las emisiones de CO₂ directas.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER (Basado en Footer.jsx) -->
+    <footer class="bg-primary text-primary-foreground py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center gap-2 opacity-90">
+                    <i data-lucide="mail" class="w-4 h-4"></i>
+                    <span>Contacto: info@ecocloud.com</span>
+                </div>
+                
+                <div class="text-center md:text-right">
+                    <p class="text-sm opacity-90">
+                        Licencia: CC BY-NC-SA
+                    </p>
+                    <p class="text-xs opacity-75 mt-1">
+                        © 2025 EcoCloud Hosting - El futuro sostenible del Cloud
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript para la Calculadora Interactiva de CO2 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Inicialización de Lucide Icons
+            lucide.createIcons();
+
+            const traficoInput = document.getElementById('trafico');
+            const contenidoSelect = document.getElementById('contenido');
+            const calcularBtn = document.getElementById('calcularBtn');
+            const resultadoDiv = document.getElementById('resultado');
+            const resultadoTexto = document.getElementById('resultadoTexto');
+            const loadingMessage = document.getElementById('loadingMessage');
+            const progressBar = document.getElementById('progressBar');
+            const ctx = document.getElementById('carbonChart').getContext('2d');
+            let myChart = null;
+
+            // FÓRMULA SIMULADA DE EMISIONES (Gramos de CO2 por día)
+            // Estos valores están basados en el principio de simulación del proyecto.
+            const CO2_FACTOR_TRADICIONAL = 0.40; // 0.40 g CO2 por visitante*unidad de impacto
+            const CO2_FACTOR_ECOCLOUD = 0.08;     // 0.08 g CO2 por visitante*unidad de impacto (80% de ahorro)
+
+            function calcularCO2(trafico, impactoContenido) {
+                // El impacto total es (Tráfico * Impacto del Contenido)
+                const impactoBase = trafico * impactoContenido;
+                
+                // Cálculo 1: Servidor Tradicional (Alto Factor)
+                const co2Tradicional = Math.round(impactoBase * CO2_FACTOR_TRADICIONAL * 365 / 1000); // kg CO2/año
+                
+                // Cálculo 2: EcoCloud (Bajo Factor)
+                const co2EcoCloud = Math.round(impactoBase * CO2_FACTOR_ECOCLOUD * 365 / 1000); // kg CO2/año
+                
+                return { co2Tradicional, co2EcoCloud };
+            }
+
+            function dibujarGrafico(tradicional, ecocloud) {
+                // Destruir el gráfico anterior si existe para evitar errores de Chart.js
+                if (myChart) {
+                    myChart.destroy();
+                }
+
+                // Dibujar el nuevo gráfico
+                myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Servidor Tradicional', 'EcoCloud Hosting'],
+                        datasets: [{
+                            label: 'Emisiones de CO₂ (kg/año)',
+                            data: [tradicional, ecocloud],
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.8)', // Rojo para el impacto alto (Tradicional)
+                                'rgba(56, 161, 105, 0.8)' // Verde para el impacto bajo (EcoCloud)
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(56, 161, 105, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        animation: {
+                            duration: 1000, // Duración de la animación en milisegundos
+                            easing: 'easeInOutQuad'
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Emisiones de CO₂ (Kilogramos por año)'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function manejarCalculo() {
+                const trafico = parseInt(traficoInput.value) || 0;
+                const impactoContenido = parseInt(contenidoSelect.value) || 1;
+
+                if (trafico < 100) {
+                    // Usar un modal o mensaje de error en lugar de alert()
+                    resultadoTexto.textContent = '¡Atención! Ingresa un tráfico diario mayor a 100 visitantes para un cálculo significativo.';
+                    resultadoDiv.classList.remove('hidden');
+                    resultadoDiv.classList.add('bg-red-100', 'border-red-400');
+                    return;
+                }
+
+                // 1. Mostrar carga y deshabilitar botón
+                calcularBtn.disabled = true;
+                loadingMessage.classList.remove('hidden');
+                progressBar.style.width = '0%';
+                resultadoDiv.classList.add('hidden');
+                
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += 10;
+                    progressBar.style.width = `${progress}%`;
+
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        
+                        // 2. Realizar el cálculo
+                        const { co2Tradicional, co2EcoCloud } = calcularCO2(trafico, impactoContenido);
+                        
+                        // 3. Dibujar y mostrar resultados
+                        dibujarGrafico(co2Tradicional, co2EcoCloud);
+                        
+                        const ahorro = co2Tradicional - co2EcoCloud;
+                        resultadoTexto.innerHTML = `
+                            Emisiones Estimadas (Tradicional): <strong>${co2Tradicional} kg CO₂/año</strong>.<br>
+                            Emisiones Estimadas (EcoCloud): <strong>${co2EcoCloud} kg CO₂/año</strong>.<br>
+                            ¡**Ahorro total:** ${ahorro} kg CO₂/año!
+                        `;
+                        
+                        resultadoDiv.classList.remove('hidden');
+                        resultadoDiv.classList.remove('bg-red-100', 'border-red-400');
+                        resultadoDiv.classList.add('bg-green-50', 'border-green-300');
+
+
+                        // 4. Ocultar carga y habilitar botón
+                        loadingMessage.classList.add('hidden');
+                        calcularBtn.disabled = false;
+                    }
+                }, 100);
+            }
+
+            // Asignar evento al botón
+            calcularBtn.addEventListener('click', manejarCalculo);
+
+            // Iniciar con un cálculo por defecto
+            manejarCalculo();
+        });
+    </script>
+</body>
+</html>
